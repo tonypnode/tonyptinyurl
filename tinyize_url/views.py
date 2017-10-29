@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from tinyize_url import codec62 as codec
+from tinyize_url import codec62 as codec, models
 
 
 def home(request):
     return render(request, 'home.html')
+
 
 def add_url(request):
     """
@@ -16,6 +16,6 @@ def add_url(request):
     """
     # TODO: Should this query the DB for duplicate
     #       ... probably.
-    # pre_encode = request['url_text']
-    html = 'http://127.0.0.1:8000/{}'.format(str(codec.encode(1000)))
-    return render(request, 'returned.html', {'tiny_url': html })
+    new_url = models.Urls.objects.create(url_string=request.POST['id_url_text'])
+    html = 'http://127.0.0.1:8000/{}'.format(str(codec.encode(new_url.id)))
+    return render(request, 'returned.html', {'tiny_url': html})

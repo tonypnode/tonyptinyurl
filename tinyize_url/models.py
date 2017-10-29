@@ -1,3 +1,8 @@
 from django.db import models
 
-# Create your models here.
+
+class Urls(models.Model):
+    url_string = models.URLField()
+    url_count = models.IntegerField(default=0)
+    url_date_created = models.DateField(auto_now=True)
+
