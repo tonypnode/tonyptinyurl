@@ -36,9 +36,8 @@ class NewVisitorTest(StaticLiveServerTestCase):
         start_time = time.time()
         while True:
             try:
-                table = self.browser.find_element_by_id('id_new_url')
-                rows = table.find_elements_by_tag_name('tr')
-                self.assertIn(url_text, [row.text for row in rows], ' I COULD NOT FIND ' + url_text + ' IN THE TABLE!!')
+                returned_url = self.browser.find_element_by_id('returned_url')
+                self.assertRegex(returned_url.text, r'^http:\/\/127\.0\.0\.1\:8000\/[a-zA-z0-9]*')
                 return
             except (AssertionError, WebDriverException) as e:
                 if time.time() - start_time > MAX_WAIT:
@@ -55,13 +54,16 @@ class NewVisitorTest(StaticLiveServerTestCase):
         input_box = self.browser.find_element_by_id('id_url_entry')
         input_box.send_keys('http://www.google.com')
         input_box.send_keys(Keys.ENTER)
-        self.wait_for_url_returned("http://127.0.0.1:8000/g8")
+        self.wait_for_url_returned("http://127.0.0.1:8000")
 
     def test_url_added_to_db(self):
-        self.assertEqual('1', '2')
+        self.assertEqual(1, 2)
+
+    def test_url_retreived_from_db(self):
+        self.assertEqual(1, 2)
 
     def test_url_redirect_is_correct(self):
-        self.assertEqual('1', '2')
+        self.assertEqual(1, 2)
 
 
 
