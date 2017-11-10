@@ -1,3 +1,6 @@
+# I totally scooped this up from someone, but I can't
+# remember where... sorry... I wasn't thinking at the time
+
 BASE62 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 
@@ -35,6 +38,3 @@ def decode(string, alphabet=BASE62):
         num += alphabet.index(char) * (base ** power)
 
     return num
-
-#for x in range(100):
-#    print(str(x) + ": " + str(encode(x) + ": " + str(decode(encode(x)))))

@@ -3,6 +3,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import WebDriverException
 import time
+import re
 import os
 
 MAX_WAIT = 5
@@ -32,13 +33,27 @@ class NewVisitorTest(StaticLiveServerTestCase):
     def tearDown(self):
         self.browser.quit()
 
+    def go_to_page(self, send_keys=False):
+        self.browser.get('http://127.0.0.1:8000')
+        input_box = self.browser.find_element_by_id('id_url_entry')
+        if send_keys:
+            input_box.send_keys('http://www.google.com')
+            input_box.send_keys(Keys.ENTER)
+
     def wait_for_url_returned(self, url_text):
+        """
+        will use the url_text param when the site gets moved from
+        127.0.0.1
+        :param url_text:
+        :return:
+        """
         start_time = time.time()
+
         while True:
             try:
                 returned_url = self.browser.find_element_by_id('returned_url')
                 self.assertRegex(returned_url.text, r'^http:\/\/127\.0\.0\.1\:8000\/[a-zA-z0-9]*')
-                return
+                return returned_url.text
             except (AssertionError, WebDriverException) as e:
                 if time.time() - start_time > MAX_WAIT:
                     raise e
@@ -50,20 +65,25 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.browser.quit()
 
     def test_gets_short_url(self):
-        self.browser.get('http://127.0.0.1:8000')
-        input_box = self.browser.find_element_by_id('id_url_entry')
-        input_box.send_keys('http://www.google.com')
-        input_box.send_keys(Keys.ENTER)
+        self.go_to_page(send_keys=True)
         self.wait_for_url_returned("http://127.0.0.1:8000")
 
-    def test_url_added_to_db(self):
-        self.assertEqual(1, 2)
-
-    def test_url_retreived_from_db(self):
-        self.assertEqual(1, 2)
-
     def test_url_redirect_is_correct(self):
-        self.assertEqual(1, 2)
+        """
+        Should this be a unit test?
+        """
+        self.go_to_page(send_keys=True)
+        check_url = self.wait_for_url_returned('bla')
+        self.browser.get(check_url)
+        start_time = time.time()
+        while True:
+            try:
+                self.assertIn('Google', self.browser.title)
+                return
+            except (AssertionError, WebDriverException) as e:
+                if time.time() - start_time > MAX_WAIT:
+                    raise e
+                time.sleep(0.5)
 
 
 
