@@ -20,7 +20,7 @@ from tinyize_url import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.home, name='home'),
-    url(r'^add_url/$', views.add_url, name='add'),
-    url(r'^[a-zA-z0-9][a-zA-z0-9]*?$', views.follow),
+    url(r'^add_url', views.add_url, name='add'),
+    url(r'^go/[a-zA-z0-9][a-zA-z0-9]*?', views.follow),
 
 ]

@@ -44,8 +44,9 @@ class NewVisitorTest(StaticLiveServerTestCase):
         """
         will use the url_text param when the site gets moved from
         127.0.0.1
-        :param url_text:
-        :return:
+
+        :param url_text: the shortened url
+        :type url_text: str
         """
         start_time = time.time()
 
