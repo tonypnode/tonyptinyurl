@@ -14,7 +14,7 @@ def encode(num, alphabet=BASE62):
     :type: int
 
     :param alphabet: The alphanumeric string used for encoding
-    :type str
+    :type alphabet: str
 
     :return str
     """
