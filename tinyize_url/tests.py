@@ -83,4 +83,3 @@ class MinorFeatures(TestBaseClass):
         self.client.get('/go/{}'.format(encode(add_url.id)))
         self.client.get('/go/{}'.format(encode(add_url.id)))
         self.assertEqual(Urls.objects.get(id=decode(str(add_url.id))).url_count, 2)
-
