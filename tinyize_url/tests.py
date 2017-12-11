@@ -40,11 +40,12 @@ class DatabaseTest(TestBaseClass):
         self.assertEqual(self.test_url, Urls.objects.get(url_string=self.test_url).url_string)
 
     def test_for_duplicate(self):
+        not_dup = check_duplicate(self.test_url)
+        self.assertEqual(not_dup[0], False)
         add_url = Urls.objects.create(url_string=self.test_url)
         add_url.save()
-        response = check_duplicate(self.test_url)
-        print(response)
-        self.assertEqual(response[0], True)
+        dup = check_duplicate(self.test_url)
+        self.assertEqual(dup[0], True)
 
 
 class UrlEncodingTests(TestBaseClass):
@@ -76,5 +77,5 @@ class MinorFeatures(TestBaseClass):
 
         self.client.get('/go/{}'.format(encode(add_url.id)))
         self.client.get('/go/{}'.format(encode(add_url.id)))
-        self.assertEqual(Urls.objects.get(id=decode(add_url.id)).url_count, 2)
+        self.assertEqual(Urls.objects.get(id=decode(str(add_url.id))).url_count, 2)
 
