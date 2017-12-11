@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from tinyize_url import codec62 as codec, models
-import re
-
+from tinyize_url import tiny_helpers as helpers
 
 def home(request):
     return render(request, 'home.html')
@@ -15,11 +14,16 @@ def add_url(request):
         and becomes the url.
 
     """
-    # TODO: Should this query the DB for duplicate
-    #       ... probably.
-    print(request.POST['id_url_text'])
-    new_url = models.Urls.objects.create(url_string=request.POST['id_url_text'])
-    html = 'http://127.0.0.1:8000/go/{}'.format(str(codec.encode(new_url.id)))
+    html_base = 'http://127.0.0.1:8000/go/'
+    posted_url = request.POST['id_url_text']
+    check = helpers.check_duplicate(posted_url)
+    if check[0]:
+        url_id = check[1]
+    else:
+        new_url = models.Urls.objects.create(url_string=posted_url)
+        url_id = new_url.id
+
+    html = '{}{}'.format(html_base, str(codec.encode(url_id)))
     return render(request, 'returned.html', {'tiny_url': html})
 
 
@@ -30,7 +34,8 @@ def follow(request):
     :param request:
     :return:
     """
-    html = request.get_full_path()
-    url = models.Urls.objects.get(id=codec.decode(html.lstrip('/go/')))
+    html = request.get_full_path().lstrip('/go/')
+    url = models.Urls.objects.get(id=codec.decode(html))
+    url.url_count += 1
+    url.save()
     return redirect(url.url_string)
-    # return render(request, 'returned.html', {'tiny_url': url.url_string})
