@@ -5,6 +5,11 @@ from tinyize_url.tiny_helpers import check_duplicate
 
 
 class TestBaseClass(TestCase):
+    """
+    Base test class for unit tests
+
+    Sets up test cases used across multiple test classes
+    """
 
     def setUp(self):
         self.test_url = 'http://www.abcdelsjfkd.tonypnode'

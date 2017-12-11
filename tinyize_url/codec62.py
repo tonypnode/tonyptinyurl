@@ -5,11 +5,18 @@ BASE62 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 
 def encode(num, alphabet=BASE62):
-    """Encode a positive number in Base X
+    """
+    Encode a positive number in Base62
 
-    Arguments:
-    - `num`: The number to encode
-    - `alphabet`: The alphabet to use for encoding
+    This function must return a str because alphabet contains non-int chars
+
+    :param num: The integer to encode
+    :type: int
+
+    :param alphabet: The alphanumeric string used for encoding
+    :type str
+
+    :return str
     """
     if num == 0:
         return alphabet[0]
@@ -23,11 +30,18 @@ def encode(num, alphabet=BASE62):
 
 
 def decode(string, alphabet=BASE62):
-    """Decode a Base X encoded string into the number
+    """
+    Decode a Base X encoded string into the number
 
-    Arguments:
-    - `string`: The encoded string
-    - `alphabet`: The alphabet to use for encoding
+    string must be a str because alphabet includes non int characters
+
+    :param string: The encoded string
+    :type str
+
+    :param alphabet: The alphanumeric string used for encoding
+    :type str
+
+    :return int
     """
     base = len(alphabet)
     str_len = len(string)
