@@ -4,24 +4,35 @@ from tinyize_url.models import Urls
 from tinyize_url.tiny_helpers import check_duplicate
 
 
-class HomePageTest(TestCase):
+class TestBaseClass(TestCase):
 
-    def test_home_page_returns_correct_html(self):
+    def setUp(self):
+        self.test_url = 'http://www.abcdelsjfkd.tonypnode'
+
+        self.test_input = {
+            1: '1',
+            100: '1C',
+            1000: 'g8',
+            10000: '2Bi',
+        }
+
+        self.post_data = {
+            'id_url_text': self.test_url
+        }
+
+
+class HTMLPageTest(TestBaseClass):
+
+    def test_home_page_returns_correct_template(self):
         response = self.client.get('/')
         self.assertTemplateUsed(response, 'home.html')
 
+    def test_return_page_returns_correct_template(self):
+        response = self.client.post('/add_url', data=self.post_data, follow=True)
+        self.assertTemplateUsed(response, 'returned.html')
 
-class DatabaseTest(TestCase):
 
-    def setUp(self):
-        """
-        Create test database?
-
-        :return:
-        """
-
-        self.test_url = 'http://www.abcdelsjfkd.poop'
-        pass
+class DatabaseTest(TestBaseClass):
 
     def test_can_add_to_db(self):
         add_url = Urls.objects.create(url_string=self.test_url)
@@ -36,15 +47,7 @@ class DatabaseTest(TestCase):
         self.assertEqual(response[0], True)
 
 
-class UrlEncodingTests(TestCase):
-
-    def setUp(self):
-        self.test_input = {
-            1: '1',
-            100: '1C',
-            1000: 'g8',
-            10000: '2Bi',
-        }
+class UrlEncodingTests(TestBaseClass):
 
     def test_encode(self):
         """
@@ -64,4 +67,14 @@ class UrlEncodingTests(TestCase):
         for int_in, str_out in self.test_input.items():
             self.assertEqual(decode(str_out), int_in)
 
+
+class MinorFeatures(TestBaseClass):
+
+    def test_url_count_increase(self):
+        add_url = Urls.objects.create(url_string=self.test_url)
+        add_url.save()
+
+        self.client.get('/go/{}'.format(encode(add_url.id)))
+        self.client.get('/go/{}'.format(encode(add_url.id)))
+        self.assertEqual(Urls.objects.get(id=decode(add_url.id)).url_count, 2)
 
