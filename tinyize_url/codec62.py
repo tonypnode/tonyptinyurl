@@ -36,10 +36,10 @@ def decode(string, alphabet=BASE62):
     string must be a str because alphabet includes non int characters
 
     :param string: The encoded string
-    :type str
+    :type string: str
 
     :param alphabet: The alphanumeric string used for encoding
-    :type str
+    :type alphabet: str
 
     :return int
     """

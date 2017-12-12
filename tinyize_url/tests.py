@@ -1,5 +1,5 @@
 from django.test import TestCase
-from tinyize_url.codec62 import encode, decode
+from tinyize_url.codec62 import encode, decode, BASE62
 from tinyize_url.models import Urls
 from tinyize_url.tiny_helpers import check_duplicate
 
@@ -57,7 +57,10 @@ class HTMLPageTest(TestBaseClass):
         Test redirect response when requesting tiny URL
 
         """
-        pass
+        response = self.client.post('/add_url', data=self.post_data, follow=True)
+        url_id = Urls.objects.get(url_string=self.post_data['id_url_text']).id
+        request = self.client.get('/go/{}'.format(encode(url_id)))
+        self.assertEqual(request.url, self.test_url)
 
 
 class DatabaseTest(TestBaseClass):
@@ -112,6 +115,12 @@ class UrlEncodingTests(TestBaseClass):
 
         for int_in, str_out in self.test_input.items():
             self.assertEqual(decode(str_out), int_in)
+
+    def test_correct_base_len(self):
+        """
+        Validate BASE62 is actually 62 chars long
+        """
+        self.assertEqual(len(BASE62), 62)
 
 
 class MinorFeatures(TestBaseClass):
