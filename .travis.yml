@@ -5,3 +5,6 @@ install:
   - pip install -r requirements.txt
 script:
   - python manage.py test tinyize_url
+  - coverage run --source='.' manage.py test tinyize_url
+after_success:
+  - coverage report
