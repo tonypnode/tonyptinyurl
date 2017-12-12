@@ -16,6 +16,7 @@ That's pretty much it..
 * Provide a heat map of most used URLs
 * Ensure 100% code coverage for tests
 * Automate testing with Travis (done)
+* Custom TinyURLs (/tonypnode-git or /some-cool-thing)
 
 #### check out the #python-tdd slack channel at [https://codebuddies.org](https://codebuddies.org)
 * Without the awesome people at #python-tdd and the [http://trizpug.org](http://trizpug.org), I wouldn't have been able to get this far

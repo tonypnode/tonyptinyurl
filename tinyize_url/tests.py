@@ -12,6 +12,10 @@ class TestBaseClass(TestCase):
     """
 
     def setUp(self):
+        """
+        Setup common use cases and data for subclassed tests
+
+        """
         self.test_url = 'http://www.abcdelsjfkd.tonypnode'
 
         self.test_input = {
@@ -27,24 +31,57 @@ class TestBaseClass(TestCase):
 
 
 class HTMLPageTest(TestBaseClass):
+    """
+    Validates templates and redirects
+
+    """
 
     def test_home_page_returns_correct_template(self):
+        """
+        Test proper template for home page
+
+        """
         response = self.client.get('/')
         self.assertTemplateUsed(response, 'home.html')
 
     def test_return_page_returns_correct_template(self):
+        """
+        Test proper template for displaying a the tinyURL after input
+
+        """
         response = self.client.post('/add_url', data=self.post_data, follow=True)
         self.assertTemplateUsed(response, 'returned.html')
 
+    def test_redirect(self):
+        """
+        Test redirect response when requesting tiny URL
+
+        """
+        pass
+
 
 class DatabaseTest(TestBaseClass):
+    """
+    Validates database functionality
+
+    """
 
     def test_can_add_to_db(self):
+        """
+        Tests adding record to Url table
+
+        """
         add_url = Urls.objects.create(url_string=self.test_url)
         add_url.save()
         self.assertEqual(self.test_url, Urls.objects.get(url_string=self.test_url).url_string)
 
     def test_for_duplicate(self):
+        """
+        Tests denying duplicate records in database
+
+        """
+        # TODO: Should the 'not_duplicate' check stay here? Or should it be a separate test?
+
         not_dup = check_duplicate(self.test_url)
         self.assertEqual(not_dup[0], False)
         add_url = Urls.objects.create(url_string=self.test_url)
@@ -54,10 +91,13 @@ class DatabaseTest(TestBaseClass):
 
 
 class UrlEncodingTests(TestBaseClass):
+    """
+    Validates encoding and decoding to Base62 functionality
+    """
 
     def test_encode(self):
         """
-        validate the encoding output is correct
+        Validate the encoding output is correct
 
         """
 
@@ -75,8 +115,16 @@ class UrlEncodingTests(TestBaseClass):
 
 
 class MinorFeatures(TestBaseClass):
+    """
+    Validates minor feature functionality outside of primary function (adding URLs and redirecting)
+
+    """
 
     def test_url_count_increase(self):
+        """
+        Test tracking usage of TinyURLs
+
+        """
         add_url = Urls.objects.create(url_string=self.test_url)
         add_url.save()
 
