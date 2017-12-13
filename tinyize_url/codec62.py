@@ -1,5 +1,4 @@
-# I totally scooped this up from someone, but I can't
-# remember where... sorry... I wasn't thinking at the time
+# scooped this up from https://stackoverflow.com/questions/1119722/base-62-conversion
 
 BASE62 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
