@@ -19,6 +19,7 @@ class TestBaseClass(TestCase):
         self.test_url = 'http://www.abcdelsjfkd.tonypnode'
 
         self.test_input = {
+            0: '0',
             1: '1',
             100: '1C',
             1000: 'g8',
@@ -35,6 +36,7 @@ class HTMLPageTest(TestBaseClass):
     Validates templates and redirects
 
     """
+    #TODO: These can all be refactored for DRY
 
     def test_home_page_returns_correct_template(self):
         """
@@ -43,6 +45,7 @@ class HTMLPageTest(TestBaseClass):
         """
         response = self.client.get('/')
         self.assertTemplateUsed(response, 'home.html')
+        self.assertEqual(str(response.status_code), '200')
 
     def test_return_page_returns_correct_template(self):
         """
@@ -51,16 +54,25 @@ class HTMLPageTest(TestBaseClass):
         """
         response = self.client.post('/add_url', data=self.post_data, follow=True)
         self.assertTemplateUsed(response, 'returned.html')
+        self.assertEqual(str(response.status_code), '200')
 
     def test_redirect(self):
         """
-        Test redirect response when requesting tiny URL
+        Test redirect when requesting tiny URL
 
         """
         response = self.client.post('/add_url', data=self.post_data, follow=True)
         url_id = Urls.objects.get(url_string=self.post_data['id_url_text']).id
         request = self.client.get('/go/{}'.format(encode(url_id)))
-        self.assertEqual(request.url, self.test_url)
+        self.assertRedirects(request, self.test_url, fetch_redirect_response=False)
+
+    def test_admin_site(self):
+        """
+        Test redirect or good response from admin site
+
+        """
+        response = self.client.get('/admin/')
+        self.assertHTMLEqual(str(response.status_code), '302' or '200')
 
 
 class DatabaseTest(TestBaseClass):

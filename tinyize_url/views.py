@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from tinyize_url import codec62 as codec, models
 from tinyize_url import tiny_helpers as helpers
 
+
 def home(request):
     return render(request, 'home.html')
 
@@ -30,9 +31,13 @@ def add_url(request):
 def follow(request):
     """
     Query the DB for the url string (everything after 'go/' and
-    redirect to the string in the
+    redirect to the string in the full url in db
+
     :param request:
-    :return:
+    :type request:
+
+    :return: redirect
+
     """
     html = request.get_full_path().lstrip('/go/')
     url = models.Urls.objects.get(id=codec.decode(html))
