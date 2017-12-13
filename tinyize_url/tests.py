@@ -104,6 +104,9 @@ class DatabaseTest(TestBaseClass):
         dup = check_duplicate(self.test_url)
         self.assertEqual(dup[0], True)
 
+    def test_no_blank_entry(self):
+        pass
+
 
 class UrlEncodingTests(TestBaseClass):
     """
