@@ -17,7 +17,7 @@ def add_url(request):
     """
     html_base = 'http://127.0.0.1:8000/go/'
     posted_url = request.POST['id_url_text']
-    if not posted_url and posted_url != '':
+    if posted_url and posted_url != '':
         # TODO: need helper that does both checks and checks for recursive url (/go/bla)
         check = helpers.check_duplicate(posted_url)
         if check[0]:
@@ -25,8 +25,10 @@ def add_url(request):
         else:
             new_url = models.Urls.objects.create(url_string=posted_url)
             url_id = new_url.id
+    else:
+        raise ValueError('The posted URL is blank')
+    html = '{}{}'.format(html_base, str(codec.encode(url_id)))
 
-        html = '{}{}'.format(html_base, str(codec.encode(url_id)))
     return render(request, 'returned.html', {'tiny_url': html})
 
 
